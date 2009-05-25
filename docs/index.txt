@@ -13,8 +13,19 @@ Welcome to FormAlchemy's documentation!
 
    doc
 
+
 Changes
 =======
+
+#
+#.. sidebar:: Testing 1 2 3
+#   :subtitle: Testing encore sous-titre
+#
+#   * Meilleurs choses
+#   * Ici et ailleurs
+#   * Sans tomber
+#      * Dans l'eau
+#
 
 .. include:: ../CHANGELOG.txt
 
