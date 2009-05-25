@@ -128,6 +128,53 @@ class AbstractFieldSet(base.EditableRenderer):
         return errors
     errors = property(errors)
 
+    def modify(self, *args):
+        """Modify fields with their new value, without modifying the order"""
+        for override in args:
+            for i, field in enumerate(self._render_fields):
+                if field == override.key:
+                    self._render_fields[field] = override
+                    break
+        return self
+
+    def remove(self, *args):
+        """Remove some fields from the rendered fields, after creating
+        the FieldSet"""
+        for to_remove in args:
+            if isinstance(to_remove, (str, unicode)):
+                del self._render_fields[to_remove]
+            else:
+                del self._render_fields[to_remove.key]
+        return self
+    
+    def insert_after(self, after_what, field):
+        """Insert a field to be rendered after a given field.
+
+        `after_what` - field name as string
+        """
+        odict = self._render_fields
+        if after_what not in odict._list:
+            raise ValueError('No such field in render_fields: %s' % after_what)
+        idx = odict._list.index(after_what)
+        return self.insert_at_index(idx + 1, field)
+ 
+    def insert_at_index(self, idx, field):
+        """Insert a field to be rendered before a given field. This will
+        insert the field at index `idx`, pushing the other fields towards the
+        end. This is like the normal python list.insert() function.
+        """
+        self._render_fields[field.key] = field 
+        self._render_fields._list.remove(field.key)
+        self._render_fields._list.insert(idx, field.key)
+        return self
+
+    def append(self, field):
+        """Append given field to list of fields to be rendered."""
+        self._render_fields[field.key] = field 
+        self._render_fields._list.remove(field.key)
+        self._render_fields._list.append(field.key)
+        return self
+
 
 class FieldSet(AbstractFieldSet):
     """

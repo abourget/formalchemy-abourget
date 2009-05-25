@@ -1,6 +1,9 @@
 1.2.1
 -----
 
+* added `modify`, `insert_after`, `insert_at_index`, `remove` to modify a
+  FieldSet object after creation.
+
 * bug fixes: issues 70, 80, 82, 97
 
 * added spanish tanslation (thanks to robarago)
