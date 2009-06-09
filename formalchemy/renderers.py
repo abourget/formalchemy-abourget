@@ -221,6 +221,17 @@ class FieldRenderer(object):
             return self.params.getall(self.name)
         return self.params.getone(self.name)
 
+    def value(self):
+        """Return the current value for this field, either from the database
+        or from the result of the validation, if any value was successfully
+        parsed.
+
+        This value should always look like if it came from the database model.
+        It should be some python value (eg., datetime object). It can also come
+        from the deserialize() function, or the cached validation results."""
+        return self.field.value
+    value = property(value)
+
     def deserialize(self):
         """
         Turns the user-submitted data into a Python value.

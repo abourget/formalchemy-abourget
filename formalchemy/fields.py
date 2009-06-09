@@ -134,6 +134,18 @@ def _model_equal(a, b):
     return a is b
 
 
+def _cache_deserialize(func):
+    """Simple caching decorator"""
+    def cache(self, *args, **kwargs):
+        if self._deserialization_done:
+            return self._deserialization_result
+               
+        self._deserialization_result = func(self, *args, **kwargs)
+        self._deserialization_done = True
+
+        return self._deserialization_result
+    return cache
+
 class AbstractField(object):
     """
     Contains the information necessary to render (and modify the rendering of)
@@ -175,6 +187,9 @@ class AbstractField(object):
         self.render_opts = {}
         # validator functions added with .validate()
         self._validators = []
+        # Prime cache for validation results
+        self._deserialization_done = False
+        self._deserialization_result = None
         # errors found by _validate() (which runs implicit and
         # explicit validators)
         self.errors = []
@@ -501,6 +516,7 @@ class AbstractField(object):
         """
         raise NotImplementedError()
 
+    @_cache_deserialize
     def _deserialize(self):
         return self.renderer.deserialize()
 
@@ -754,6 +770,7 @@ class AttributeField(AbstractField):
             return self.parent.default_renderers['dropdown']
         return AbstractField._get_renderer(self)
 
+    @_cache_deserialize
     def _deserialize(self):
         # for multicolumn keys, we turn the string into python via _simple_eval; otherwise,
         # the key is just the raw deserialized value (which is already an int, etc., as necessary)
