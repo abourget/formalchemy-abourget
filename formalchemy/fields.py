@@ -533,7 +533,21 @@ class AbstractField(object):
 
 class Field(AbstractField):
     """
-    A manually-added form field
+    A manually-added form field.
+
+    This is the object that will be used if you create a field and add
+    it to a FieldSet using the `add()` method. Default values will be
+    the one passed as the `value` parameter. Raw model value will be that
+    default value also.
+
+    NOTE: you can override `raw_value` to return some data actually
+    fetched from the model, through `self.model.some_attribute`, if you
+    added a field to a FieldSet which is bound to an SQLAlchemy model.
+    This way you could completely customize the behavior of your widget.
+    Keep in mind that you will have to save the renderers' `.value` to
+    your model's attribute manually. You should simply need to assign your
+    `[FieldSet].[field_name].value` to your model, somewhere after calling
+    `sync()` on your `FieldSet`.
     """
     def __init__(self, name=None, type=fatypes.String, value=None):
         """
@@ -610,6 +624,10 @@ class Field(AbstractField):
 class AttributeField(AbstractField):
     """
     Field corresponding to an SQLAlchemy attribute.
+
+    This class will be used automatically when mapping to an SQLAlchemy
+    object. Default data will be taken from the table definitions. Raw
+    model values will be taken from the model objects.
     """
     def __init__(self, instrumented_attribute, parent):
         """
