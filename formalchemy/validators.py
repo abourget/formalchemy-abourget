@@ -197,7 +197,7 @@ def passwords_match(first_password_field):
         else:
             fld = first_password_field.key
 
-        if value != field.parent[fld].value:
+        if value != getattr(field.parent, fld).value:
             raise ValidationError(_('Passwords must match'))
     return f
 
