@@ -33,6 +33,11 @@
   only to be used in your templates, to tweak the output according to those
   properties. See docs/forms.txt
 
+* FieldSet.configure() can now be called with options=[Field('field1'), Field('field2')]
+  to simply replace fields already scheduled to be rendered. It can now be called
+  multiple times to modify without resetting the `include` or `exclude` values, provided
+  you do not specify `include` *and* `exclude`.
+
 
 1.2
 ---
