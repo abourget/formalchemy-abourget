@@ -766,7 +766,7 @@ class AbstractField(object):
         # other render options, such as size, multiple, etc.
         self.render_opts = {}
         # validator functions added with .validate()
-        self.validators = []
+        self._validators = []
         # errors found by _validate() (which runs implicit and
         # explicit validators)
         self.errors = []
@@ -786,7 +786,7 @@ class AbstractField(object):
     def __deepcopy__(self, memo):
         wrapper = copy(self)
         wrapper.render_opts = dict(self.render_opts)
-        wrapper.validators = list(self.validators)
+        wrapper._validators = list(self._validators)
         wrapper.errors = list(self.errors)
         try:
             wrapper._renderer = copy(self._renderer)
@@ -821,7 +821,7 @@ class AbstractField(object):
             self.errors.append(e)
             return False
 
-        L = list(self.validators)
+        L = list(self._validators)
         if self.is_required() and validators.required not in L:
             L.append(validators.required)
         for validator in L:
@@ -841,7 +841,7 @@ class AbstractField(object):
 
     def is_required(self):
         """True iff this Field must be given a non-empty value"""
-        return validators.required in self.validators
+        return validators.required in self._validators
 
     def is_readonly(self):
         """True iff this Field is in readonly mode"""
@@ -902,7 +902,7 @@ class AbstractField(object):
         fails with a message explaining the cause of failure.
         """
         field = deepcopy(self)
-        field.validators.append(validator)
+        field._validators.append(validator)
         return field
     def required(self):
         """
@@ -1238,7 +1238,7 @@ class AttributeField(AbstractField):
 
         # smarter default "required" value
         if not self.is_collection and not self.is_readonly() and [c for c in _columns if not c.nullable]:
-            self.validators.append(validators.required)
+            self._validators.append(validators.required)
 
     def is_readonly(self):
         from sqlalchemy.sql.expression import _Label
