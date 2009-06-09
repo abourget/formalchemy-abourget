@@ -232,6 +232,17 @@ class FieldRenderer(object):
         return self.field.value
     value = property(value)
 
+    def value_objects(self):
+        """Same as `value`, except returns a list of objects instead of 
+        primary keys, when working with ForeignKeys.
+
+        Use this when your `deserialize` or `render` functions manipulates
+        ForeignKey objects; adding, removing or changing display according
+        to their contents.
+        """
+        return self.field.value_objects
+    value_objects = property(value_objects)
+
     def deserialize(self):
         """
         Turns the user-submitted data into a Python value.

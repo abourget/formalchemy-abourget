@@ -1,6 +1,9 @@
 1.2.1
 -----
 
+* Added `.value_objects` to both Field and FieldRenderer objects. Returns the
+  objects instead of list of primary keys when working with ForeignKeys.
+
 * everything that deals with `Field`, and `AbstractField` is left in fields.py
   while everything related to renderers (TextFieldRenderer) are not in
   renderers.py - you can fix your code by just renaming the imports of

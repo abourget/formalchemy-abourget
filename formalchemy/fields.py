@@ -136,7 +136,7 @@ def _model_equal(a, b):
 
 def _cache_deserialize(func):
     """Simple caching decorator"""
-    def cache(self, *args, **kwargs):
+    def cache_decorator(self, *args, **kwargs):
         if self._deserialization_done:
             return self._deserialization_result
                
@@ -144,7 +144,7 @@ def _cache_deserialize(func):
         self._deserialization_done = True
 
         return self._deserialization_result
-    return cache
+    return cache_decorator
 
 
 class AbstractField(object):
@@ -501,6 +501,16 @@ class AbstractField(object):
                 return self._pkify(v)
         return self.model_value
     value = property(value)
+
+    def value_objects(self):
+        """This is the same as `value`, except that when used with ForeignKeys,
+        instead of returning a list of primary keys, it will return a list of
+        objects.
+        """
+        if not self.is_readonly() and self.parent.data is not None:
+            return self._deserialize()
+        return self.model_value
+    value_objects = property(value_objects)
 
     def model_value(self):
         """
