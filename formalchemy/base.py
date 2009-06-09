@@ -20,8 +20,9 @@ from sqlalchemy.orm.scoping import ScopedSession
 from sqlalchemy.orm.dynamic import DynamicAttributeImpl
 from sqlalchemy.util import OrderedDict
 
-import fields, fatypes
-
+from formalchemy import fields
+from formalchemy import renderers
+from formalchemy import fatypes
 
 compile_mappers() # initializes InstrumentedAttributes
 
@@ -46,6 +47,7 @@ def prettify(text):
     'My column name'
     """
     return text.replace("_", " ").capitalize()
+
 
 
 class SimpleMultiDict(dict):
@@ -205,7 +207,7 @@ class ModelRenderer(object):
             self._fields.update((field.key, field) for field in L)
 
     def add(self, field):
-        """Add a form Field.  By default, this Field will be included in the rendered form or table."""
+        """Add a form Field.  By default, this Field will be included in the rendered form or table, unless you specify `include=` or `exclude=` explicitly."""
         if not isinstance(field, fields.Field):
             raise ValueError('Can only add Field objects; got %s instead' % field)
         field.parent = self
@@ -214,7 +216,9 @@ class ModelRenderer(object):
     def render_fields(self):
         """
         The set of attributes that will be rendered, as a (ordered)
-        dict of `{fieldname: Field}` pairs
+        dict of `{fieldname: Field}` pairs. If you haven't called configure
+        with exclude/include, then this will be the list of default Fields
+        as found by introspecting the SQLAlchemy model.
         """
         if not self._render_fields:
             self._render_fields = OrderedDict([(field.key, field) for field in self._get_fields()])
@@ -462,18 +466,18 @@ class ModelRenderer(object):
 
 class EditableRenderer(ModelRenderer):
     default_renderers = {
-        fatypes.String: fields.TextFieldRenderer,
-        fatypes.Integer: fields.IntegerFieldRenderer,
-        fatypes.Float: fields.FloatFieldRenderer,
-        fatypes.Numeric: fields.FloatFieldRenderer,
-        fatypes.Boolean: fields.CheckBoxFieldRenderer,
-        fatypes.DateTime: fields.DateTimeFieldRenderer,
-        fatypes.Date: fields.DateFieldRenderer,
-        fatypes.Time: fields.TimeFieldRenderer,
-        fatypes.Binary: fields.FileFieldRenderer,
-        'dropdown': fields.SelectFieldRenderer,
-        'checkbox': fields.CheckBoxSet,
-        'radio': fields.RadioSet,
-        'password': fields.PasswordFieldRenderer,
-        'textarea': fields.TextAreaFieldRenderer,
+        fatypes.String: renderers.TextFieldRenderer,
+        fatypes.Integer: renderers.IntegerFieldRenderer,
+        fatypes.Float: renderers.FloatFieldRenderer,
+        fatypes.Numeric: renderers.FloatFieldRenderer,
+        fatypes.Boolean: renderers.CheckBoxFieldRenderer,
+        fatypes.DateTime: renderers.DateTimeFieldRenderer,
+        fatypes.Date: renderers.DateFieldRenderer,
+        fatypes.Time: renderers.TimeFieldRenderer,
+        fatypes.Binary: renderers.FileFieldRenderer,
+        'dropdown': renderers.SelectFieldRenderer,
+        'checkbox': renderers.CheckBoxSet,
+        'radio': renderers.RadioSet,
+        'password': renderers.PasswordFieldRenderer,
+        'textarea': renderers.TextAreaFieldRenderer,
     }

@@ -4,7 +4,7 @@ import stat
 import string
 import random
 import formalchemy.helpers as h
-from formalchemy.fields import FileFieldRenderer as Base
+from formalchemy.renderers import FileFieldRenderer as Base
 from formalchemy.validators import regex
 from formalchemy.i18n import _
 

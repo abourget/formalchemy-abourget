@@ -1,6 +1,11 @@
 1.2.1
 -----
 
+* everything that deals with `Field`, and `AbstractField` is left in fields.py
+  while everything related to renderers (TextFieldRenderer) are not in
+  renderers.py - you can fix your code by just renaming the imports of
+  everything dealing with *Renderers objects.
+
 * added `modify`, `insert_after`, `insert_at_index`, `remove` to modify a
   FieldSet object after creation.
 
