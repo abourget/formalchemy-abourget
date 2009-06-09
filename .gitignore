@@ -1,0 +1,13 @@
+*.pyc
+*~
+docs-out/
+eggs/
+pylonsapp/Paste*.egg
+develop-eggs/
+
+# Hide egg-info dirs
+FormAlchemy.egg-info/
+pylonsapp/pylonsapp.egg-info/
+
+# Ignore bin dir
+bin/
