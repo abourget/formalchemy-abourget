@@ -146,6 +146,7 @@ def _cache_deserialize(func):
         return self._deserialization_result
     return cache
 
+
 class AbstractField(object):
     """
     Contains the information necessary to render (and modify the rendering of)
