@@ -3,7 +3,6 @@
 # This module is part of FormAlchemy and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
 
-# todo 2.0 pass field and value (so exception can refer to field name, for instance)
 from i18n import _
 
 if 'any' not in locals():
@@ -76,7 +75,7 @@ def currency(value, field=None):
     if '%.2f' % float_(value) != value:
         raise ValidationError('Please specify full currency value, including cents (e.g., 12.34)')
 
-def email(value, field=None):
+def email_verbose(value, field=None):
     """
     Successful if value is a valid RFC 822 email address.
     Ignores the more subtle intricacies of what is legal inside a quoted region,
@@ -138,6 +137,15 @@ def email(value, field=None):
         raise ValidationError(_("Reserved character present in domain"))
 
 
+def email(value, field=None):
+    """Defines a less verbose and explicit error message when validation
+    fails"""
+    try:
+        email_verbose(value, field)
+    except ValidationError:
+        raise ValidationError(_("Invalid e-mail address"))
+
+
 # parameterized validators return the validation function
 def maxlength(length):
     """Returns a validator that is successful if the input's length is at most the given one."""
@@ -172,6 +180,27 @@ def regex(exp, errormsg=_('Invalid input')):
             raise ValidationError(errormsg)
     return f
 
+def passwords_match(first_password_field):
+    """This validator ensures two password fields match.
+
+    You can provide either a Field objet, or a string with the
+    name of the field on the FieldSet that will be checked
+    against to make sure they match. That means you should set
+    this validator on the `second` password field.
+
+    NOTE: this validator must be attached to a Field that is
+    itself on a FieldSet.
+    """
+    def f(value, field):
+        if isinstance(first_password_field, (str, unicode)):
+            fld = first_password_field
+        else:
+            fld = first_password_field.key
+
+        if value != getattr(field.parent, fld).value:
+            raise ValidationError(_('Passwords must match'))
+    return f
+
 # possible others:
 # oneof raises if input is not one of [or a subset of for multivalues] the given list of possibilities
 # url(check_exists=False)
@@ -181,4 +210,3 @@ def regex(exp, errormsg=_('Invalid input')):
 # whole-form validators
 #   fieldsmatch
 #   requiredipresent/missing
-

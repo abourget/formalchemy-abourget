@@ -1,6 +1,17 @@
 1.2.1
 -----
 
+* Added `.value_objects` to both Field and FieldRenderer objects. Returns the
+  objects instead of list of primary keys when working with ForeignKeys.
+
+* everything that deals with `Field`, and `AbstractField` is left in fields.py
+  while everything related to renderers (TextFieldRenderer) are not in
+  renderers.py - you can fix your code by just renaming the imports of
+  everything dealing with *Renderers objects.
+
+* added `modify`, `insert_after`, `insert_at_index`, `remove` to modify a
+  FieldSet object after creation.
+
 * bug fixes: issues 70, 80, 82, 97
 
 * added spanish tanslation (thanks to robarago)
@@ -21,6 +32,11 @@
   the attributes passed in will not be rendered in the HTML element, but are there
   only to be used in your templates, to tweak the output according to those
   properties. See docs/forms.txt
+
+* FieldSet.configure() can now be called with options=[Field('field1'), Field('field2')]
+  to simply replace fields already scheduled to be rendered. It can now be called
+  multiple times to modify without resetting the `include` or `exclude` values, provided
+  you do not specify `include` *and* `exclude`.
 
 
 1.2

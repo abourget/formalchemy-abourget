@@ -1,5 +1,5 @@
-:mod:`formalchemy.fields` -- Fields and Renderers
-=================================================
+:mod:`formalchemy.fields` -- `Fields` and `Renderers`
+=====================================================
 
 .. automodule:: formalchemy.fields
 
@@ -23,6 +23,18 @@ Fields
 
 Renderers
 ---------
+
+It is important to note that althought these objects are called
+`renderers`, they are also responsible for deserialization of data
+received from the web and insertion of those (possibly mangled) values
+back to the SQLALchemy object, if any.
+
+They also have to take into consideration that the data used when
+displaying `can` come either from the `self.params` (the dict-like
+object received from the web) or from the model. The latter case
+happens when first displaying a form, and the former when validation
+triggered an error, and the form is to be re-displayed (and still
+contain the values you entered). 
 
 FieldRenderer
 *************
@@ -355,26 +367,27 @@ Custom renderer
 You can write your own `FieldRenderer` s to customize the widget (input
 element[s]) used to edit different types of fields...
 
-1. Subclass `FieldRenderer`.
+1. Subclass `FieldRenderer`, and override the following methods:
 
-   1.  Override `render` to return a string containing the HTML input
-       elements desired.  Use `self.name` to get a unique name and id for the
-       input element.  `self._value` may also be useful if you are not
-       rendering multiple input elements.
+   1. `render`, which should return the HTML for the widget. It should be
+      prefilled with the value taken from `self.value`. `self.value` represents
+      either the model value or the value received from the posted data.
+      For the field's `name` HTML attribute, you should use `self.name` which
+      gives a unique name and id for the input element.
 
-   2.  If you are rendering a custom type (any class you defined yourself),
-       you will need to override `deserialize` as well.  `render`	turns the
-       user-submitted data into a Python value.  (The raw data will be
-       available in self.field.parent.data, or you can use
-       `_serialized_value` if it is convenient.)  For SQLAlchemy collections,
-       return a list of primary keys, and `FormAlchemy` will take care of
-       turning that into a list of objects.  For manually added collections,
-       return a list of values.
+   2. `deserialize`, which does the job of taking self.params (eventually also
+      the previous model value in self.field.model.`fieldname`and
+      returning something that can be stored in the model's attribute (a bunch
+      of model objects, a datetime object or a simple unicode string)
 
-   3.  If you are rendering a builtin type with multiple input elements,
-       override `_serialized_value` to return a single string combining the
-       multiple input pieces.  See the source for DateFieldRenderer for an
-       example.
+      For SQLAlchemy collections,
+      return a list of primary keys, and `FormAlchemy` will take care of
+      turning that into a list of objects.  For manually added collections,
+      return a list of values.
+
+   3. `render_readonly`, if you wish to display forms with read-only
+      values. This should return straight `unicode` objects.
+
 
 2. Update `FieldSet.default_renderers`.  `default_renderers` is a dict of
    FieldRenderer subclasses. The default contents of

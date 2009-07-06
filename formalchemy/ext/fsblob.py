@@ -4,7 +4,7 @@ import stat
 import string
 import random
 import formalchemy.helpers as h
-from formalchemy.fields import FileFieldRenderer as Base
+from formalchemy.renderers import FileFieldRenderer as Base
 from formalchemy.validators import regex
 from formalchemy.i18n import _
 
@@ -122,9 +122,9 @@ class FileFieldRenderer(Base):
         # get value from old_value if needed
         old_value = '%s--old' % self.name
         checkbox_name = '%s--remove' % self.name
-        if not data and not self._params.has_key(checkbox_name) \
-                    and self._params.has_key(old_value):
-            return self._params[old_value]
+        if not data and not self.params.has_key(checkbox_name) \
+                    and self.params.has_key(old_value):
+            return self.params[old_value]
         return data is not None and data or ''
 
 
