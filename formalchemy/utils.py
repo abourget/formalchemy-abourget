@@ -6,6 +6,7 @@
 
 from formalchemy import config
 from sqlalchemy.orm import Query, class_mapper
+from sqlalchemy.exceptions import InvalidRequestError # 0.4 support
 
 __all__ = ['stringify', 'normalized_options', '_pk', '_pk_one_column']
 

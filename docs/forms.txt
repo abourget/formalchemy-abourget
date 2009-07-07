@@ -76,7 +76,7 @@ Here is a callable exemple::
 
 Adding Fields
 -------------
-  
+
 You can add additional fields not in your SQLAlchemy model with the `add` 
 method, which takes a :mod:`Field <formalchemy.fields>` object as parameter.
 
@@ -191,32 +191,33 @@ one FieldSet per model object in your application.
 
 In this example, we create a FieldSet to edit the `User` model object::
 
->>> from formalchemy import validators
->>> class UserFieldSet(FieldSet):
-...     """Used to edit users"""
-...     def __init__(self):
-...         """Pre-configuration"""
-...         FieldSet.__init__(self, model.User)
-...         
-...         self.add(Field('passwd1'))
-...         self.add(Field('passwd2'))
-...         inc = [self.username,
-...                self.passwd1.password().label(u'Password'),
-...                self.passwd2.password().label(u'Confirm') \
-...                    .validate(validators.passwords_match('passwd1')),
-...                self.email,
-...                self.firstname,
-...                self.lastname,
-...                ]
-...         self.configure(include=inc)
+  >>> from formalchemy import validators
+  >>> class UserFieldSet(FieldSet):
+  ...     """Used to edit users"""
+  ...     def __init__(self):
+  ...         """Pre-configuration"""
+  ...         FieldSet.__init__(self, User)
+  ...         
+  ...         self.append(Field('passwd1'))
+  ...         self.append(Field('passwd2'))
+  ...         inc = [self.name,
+  ...                self.passwd1.password().label(u'Password'),
+  ...                self.passwd2.password().label(u'Confirm') \
+  ...                    .validate(validators.passwords_match('passwd1')),
+  ...                self.email,
+  ...                ]
+  ...         self.configure(include=inc)
 
 Then you could use it in your framework controllers as::
 
->>> fs = forms.UserFieldSet().bind(my_user_object, data=request.POST or None)
->>> if request.POST and fs.validate():
-...     fs.sync()
-...     fs.model.password = fs.passwd1.value
-...     ...
+  >>> post_data = [('User--passwd1', 'pass'), ('User--passwd2', 'pass'),
+  ...              ('User--name', 'blah'), ('User--email', 'blah@example.com')]
+  >>> fs = UserFieldSet().bind(User, data=post_data or None)
+  >>> if post_data and fs.validate():
+  ...     fs.sync()
+  ...     fs.model.password = fs.passwd1.value
+
+where post_data would (in Pylons) be something like `request.POST`.
 
 
 Including data from more than one class
@@ -273,7 +274,7 @@ There are three parts you can customize in a `FieldSet` subclass short
 of writing your own render method.  These are `default_renderers`, and `prettify`.
 As in::
 
-    >>> from formalchemy import fields
+    >>> from formalchemy import renderers
     >>> def myprettify(value):
     ...     return value
 
@@ -282,8 +283,8 @@ As in::
 
     >>> class MyFieldSet(FieldSet):
     ...     default_renderers = {
-    ...         types.String: fields.TextFieldRenderer,
-    ...         types.Integer: fields.IntegerFieldRenderer,
+    ...         types.String: renderers.TextFieldRenderer,
+    ...         types.Integer: renderers.IntegerFieldRenderer,
     ...         # ...
     ...     }
     ...     prettify = staticmethod(myprettify)
@@ -294,10 +295,10 @@ will be FieldRenderer subclasses, but this is not required.  For instance,
 to make Booleans render as select fields with Yes/No options by default,
 you could write::
 
-    >>> class BooleanSelectRenderer(fields.SelectFieldRenderer):
+    >>> class BooleanSelectRenderer(renderers.SelectFieldRenderer):
     ...     def render(self, **kwargs):
     ...         kwargs['options'] = [('Yes', True), ('No', False)]
-    ...         return fields.SelectFieldRenderer.render(self, **kwargs)
+    ...         return renderers.SelectFieldRenderer.render(self, **kwargs)
 
     >>> FieldSet.default_renderers[types.Boolean] = BooleanSelectRenderer
 
