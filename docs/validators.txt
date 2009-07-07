@@ -121,51 +121,73 @@ a ValidationError if it is invalid.
 
 .. autofunction:: email
 
+.. autofunction:: email_verbose
+
   >>> email('a+formalchemy@gmail.com')
   >>> email('a+."<>"@gmail.com')
   >>> email('a+."<>"."[]"@gmail.com')
-  >>> email('a+."<>@gmail.com')
+
+The `email_verbose` version will detail the error message:
+
+  >>> email_verbose('a+."<>@gmail.com')
   Traceback (most recent call last):
   ...
   ValidationError: Unterminated quoted section in recipient
-  >>> email('a+."<>""[]"@gmail.com')
+
+while the `email` validator will output a generic error message:
+
+  >>> email('a+."<>@gmail.com')
   Traceback (most recent call last):
   ...
-  ValidationError: Quoted section must be followed by '@' or '.'
+  ValidationError: Invalid e-mail address
+
+Same here:
+
   >>> email('<>@gmail.com')
   Traceback (most recent call last):
   ...
+  ValidationError: Invalid e-mail address
+  >>> email_verbose('<>@gmail.com')
+  Traceback (most recent call last):
+  ...
   ValidationError: Reserved character present in recipient
-  >>> email(chr(0) + '@gmail.com')
+
+Here are some other possible error messages for `email_verbose`:
+
+  >>> email_verbose('a+."<>""[]"@gmail.com')
+  Traceback (most recent call last):
+  ...
+  ValidationError: Quoted section must be followed by '@' or '.'
+  >>> email_verbose(chr(0) + '@gmail.com')
   Traceback (most recent call last):
   ...
   ValidationError: Control characters present
-  >>> email(chr(129) + '@gmail.com')
+  >>> email_verbose(chr(129) + '@gmail.com')
   Traceback (most recent call last):
   ...
   ValidationError: Non-ASCII characters present
   >>> email('')
-  >>> email('asdf')
+  >>> email_verbose('asdf')
   Traceback (most recent call last):
   ...
   ValidationError: Missing @ sign
-  >>> email('@')
+  >>> email_verbose('@')
   Traceback (most recent call last):
   ...
   ValidationError: Recipient must be non-empty
-  >>> email('a@')
+  >>> email_verbose('a@')
   Traceback (most recent call last):
   ...
   ValidationError: Domain must be non-empty
-  >>> email('a@gmail.com.')
+  >>> email_verbose('a@gmail.com.')
   Traceback (most recent call last):
   ...
   ValidationError: Domain must not end with '.'
-  >>> email('a@gmail..com')
+  >>> email_verbose('a@gmail..com')
   Traceback (most recent call last):
   ...
   ValidationError: Domain must not contain '..'
-  >>> email('a@gmail>com')
+  >>> email_verbose('a@gmail>com')
   Traceback (most recent call last):
   ...
   ValidationError: Reserved character present in domain

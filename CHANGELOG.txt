@@ -1,6 +1,10 @@
 Post 1.2.1
 ----------
 
+* validator `email` renamed to `email_verbose`, and a simpler `email` validator
+  wraps `email_verbose` and outputs a single simple error message in case of
+  failure.
+
 * `.add()` method on FieldSet has been deprecated. Use `.append()` instead.
   Also note that when the FieldSet has been configured, `.append()` will add
   the field to be RENDERED in the generated form.
