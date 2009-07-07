@@ -3,7 +3,11 @@
 # This module is part of FormAlchemy and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
 
-from i18n import _
+from formalchemy.i18n import _
+
+__all__ = ['ValidationError', 'requird', 'integer', 'float_', 'decimal_',
+           'currency', 'email', 'email_verbose', 'maxlength', 'minlength',
+           'regex', 'passwords_match']
 
 if 'any' not in locals():
     # pre-2.5 support
