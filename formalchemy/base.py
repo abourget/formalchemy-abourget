@@ -208,7 +208,10 @@ class ModelRenderer(object):
             self._fields.update((field.key, field) for field in L)
 
     def append(self, field):
-        """Add a form Field. By default, this Field will be included in the rendered form or table."""
+        """Append a Field to the FieldSet.
+
+        By default, this Field will be included in the rendered form or table.
+        """
         if not isinstance(field, fields.Field):
             raise ValueError('Can only add Field objects; got %s instead' % field)
         field.parent = self
@@ -216,7 +219,7 @@ class ModelRenderer(object):
         _fields[field.name] = field
 
     def add(self, field):
-        warnings.warn(DeprecationWarning('FieldSet.add is deprecated. Use FieldSet.append instead. Your validator will break in FA 1.5'))
+        warnings.warn(DeprecationWarning('FieldSet.add is deprecated. Use FieldSet.append instead.'))
         self.append(field)
 
     def extend(self, fields):
@@ -376,6 +379,7 @@ class ModelRenderer(object):
             self.model = model
             self._bound_pk = fields._pk(model)
 
+        # Assign new data
         if data is None:
             self.data = None
         elif hasattr(data, 'getall') and hasattr(data, 'getone'):
@@ -385,6 +389,11 @@ class ModelRenderer(object):
                 self.data = SimpleMultiDict(data)
             except:
                 raise Exception('unsupported data object %s.  currently only dicts and Paste multidicts are supported' % self.data)
+
+        # Reset Field deserialization caches:
+        _fields = self._render_fields or self._fields
+        for f in _fields:
+            self[f]._reset_cache()
 
         if session:
             if not isinstance(session, Session) and not isinstance(session, ScopedSession):

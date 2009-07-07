@@ -210,6 +210,13 @@ class AbstractField(object):
         self.metadata = {}
         return False
 
+    def _reset_cache(self):
+        """Reset the cache value after deserialization. Used when
+        rebinding a FieldSet with new data, to ensure new values
+        are going to be deserialized."""
+        self._deserialization_done = False
+        self._deserialization_result = None
+
     def __deepcopy__(self, memo):
         wrapper = copy(self)
         wrapper.render_opts = dict(self.render_opts)
