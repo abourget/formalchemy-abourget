@@ -129,27 +129,11 @@ class AbstractFieldSet(base.EditableRenderer):
         return errors
     errors = property(errors)
 
-    def modify(self, *args):
-        """Modify fields with their new value, without modifying the order"""
-        for override in args:
-            for i, field in enumerate(self._render_fields):
-                if field == override.key:
-                    self._render_fields[field] = override
-                    break
-        return self
-
-    def remove(self, *args):
-        """Remove some fields from the rendered fields, after creating
-        the FieldSet"""
-        for to_remove in args:
-            if isinstance(to_remove, (str, unicode)):
-                del self._render_fields[to_remove]
-            else:
-                del self._render_fields[to_remove.key]
-        return self
-    
     def insert_after(self, after_what, field):
         """Insert a field to be rendered after a given field.
+
+        TEMPORARY: don't count on this one. It'll get merged in the .insert()
+        function soon.
 
         `after_what` - field name as string
         """
@@ -163,19 +147,15 @@ class AbstractFieldSet(base.EditableRenderer):
         """Insert a field to be rendered before a given field. This will
         insert the field at index `idx`, pushing the other fields towards the
         end. This is like the normal python list.insert() function.
+
+        TEMPORARY: don't count on this one. It'll get merged in the .insert()
+        function soon.
         """
-        self._render_fields[field.key] = field 
-        self._render_fields._list.remove(field.key)
-        self._render_fields._list.insert(idx, field.key)
+        self._render_fields[field.name] = field 
+        self._render_fields._list.remove(field.name)
+        self._render_fields._list.insert(idx, field.name)
         return self
-
-    def append(self, field):
-        """Append given field to list of fields to be rendered."""
-        self._render_fields[field.key] = field 
-        self._render_fields._list.remove(field.key)
-        self._render_fields._list.append(field.key)
-        return self
-
+    
 
 class FieldSet(AbstractFieldSet):
     """

@@ -1,5 +1,9 @@
-1.2.1
------
+Post 1.2.1
+----------
+
+* `.add()` method on FieldSet has been deprecated. Use `.append()` instead.
+  Also note that when the FieldSet has been configured, `.append()` will add
+  the field to be RENDERED in the generated form.
 
 * Added `.value_objects` to both Field and FieldRenderer objects. Returns the
   objects instead of list of primary keys when working with ForeignKeys.
@@ -12,6 +16,22 @@
 * added `modify`, `insert_after`, `insert_at_index`, `remove` to modify a
   FieldSet object after creation.
 
+* validators are now passed as second argument the `field` being validated.
+  WARN: this will mean adding the parameter to your functions to be backwards
+  compatible.
+  The validator function signature changed from `myfunc(value)` to
+  `myfunc(value, field=None)`.
+
+* added the `.with_metadata(**attrs)` method to :class:`AbstractField` which
+  allows you to add metadata to your field. The difference with `.with_html()`
+  is that the attributes passed in will not be rendered in the HTML element,
+  but are there only to be used in your templates, to tweak the output
+  according to those properties. See docs/forms.txt
+
+
+1.2.1
+-----
+
 * bug fixes: issues 70, 80, 82, 97
 
 * added spanish tanslation (thanks to robarago)
@@ -20,23 +40,7 @@
   passed to the renderers, allowing to add some HTML attributes to rendered
   HTML tags.  Removed **html_options from render method.  (See issue #60)
 
-* validators are now passed as second argument the `field` being validated. WARN:
-  this will mean adding the parameter to your functions to be backwards compatible.
-  The validator function signature changed from `myfunc(value)` to
-  `myfunc(value, field=None)`.
-
 * ext.couchdb now use couchdbkit instead of py-simplecouchdb
-
-* added the `.with_metadata(**attrs)` method to :class:`AbstractField` which allows
-  you to add metadata to your field. The difference with `.with_html()` is that
-  the attributes passed in will not be rendered in the HTML element, but are there
-  only to be used in your templates, to tweak the output according to those
-  properties. See docs/forms.txt
-
-* FieldSet.configure() can now be called with options=[Field('field1'), Field('field2')]
-  to simply replace fields already scheduled to be rendered. It can now be called
-  multiple times to modify without resetting the `include` or `exclude` values, provided
-  you do not specify `include` *and* `exclude`.
 
 
 1.2

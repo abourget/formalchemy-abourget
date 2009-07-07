@@ -247,6 +247,17 @@ class ModelRenderer(object):
             self._render_fields = OrderedDict(items)
         else:
             self._fields = OrderedDict(items)
+            
+    def modify(self, *args):
+        """Modify fields with their new value, without modifying the order"""
+        for override in args:
+            if override.name not in self._render_fields.keys():
+                raise ValueError("Field %s isn't part of the fields to render, or you didn't configure you FieldSet yet" % override)
+            for i, field in enumerate(self._render_fields):
+                if field == override.key:
+                    self._render_fields[field] = override
+                    break
+        return self
 
     def render_fields(self):
         """
@@ -490,7 +501,7 @@ class ModelRenderer(object):
     def __setattr__(self, attrname, value):
         if attrname not in ('_fields', '__dict__', 'focus') and \
            (attrname in self._fields or isinstance(value, fields.AbstractField)):
-            raise AttributeError('Do not set field attributes manually.  Use add() or configure() instead')
+            raise AttributeError('Do not set field attributes manually.  Use append() or configure() instead')
         object.__setattr__(self, attrname, value)
 
     def __delattr__(self, attrname):
