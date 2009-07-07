@@ -124,7 +124,7 @@ Render a string field::
 
 Edit mode::
 
-    >>> print fs.render()
+    >>> print fs.text.render()
     <input id="One--text" name="One--text" type="hidden" value="h" />
 
 Read only mode::
