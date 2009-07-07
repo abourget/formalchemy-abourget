@@ -268,22 +268,22 @@ session = Session()
 primary1 = PrimaryKeys(id=1, id2='22', field='value1')
 primary2 = PrimaryKeys(id=1, id2='33', field='value2')
 
-bill = User(email='bill@example.com',
-            password='1234',
-            name='Bill')
-john = User(email='john@example.com',
-            password='5678',
-            name='John')
+bill = User(email=u'bill@example.com',
+            password=u'1234',
+            name=u'Bill')
+john = User(email=u'john@example.com',
+            password=u'5678',
+            name=u'John')
 order1 = Order(user=bill, quantity=10)
 order2 = Order(user=john, quantity=5)
 order3 = Order(user=john, quantity=6)
 
-nbill = NaturalUser(email='nbill@example.com',
-                    password='1234',
-                    name='Natural Bill')
-njohn = NaturalUser(email='njohn@example.com',
-                    password='5678',
-                    name='Natural John')
+nbill = NaturalUser(email=u'nbill@example.com',
+                    password=u'1234',
+                    name=u'Natural Bill')
+njohn = NaturalUser(email=u'njohn@example.com',
+                    password=u'5678',
+                    name=u'Natural John')
 norder1 = NaturalOrder(user=nbill, quantity=10)
 norder2 = NaturalOrder(user=njohn, quantity=5)
 
