@@ -328,6 +328,10 @@ class FieldRenderer(object):
             return datetime.datetime(dt.year, dt.month, dt.day, tm.hour, tm.minute, tm.second)
 
         return data
+
+    def __repr__(self):
+        return '<%s for %r>' % (self.__class__.__name__, self.field)
+    
     def stringify_value(self, v):
         return stringify(v, null_value=self.field._null_option[1])
 
