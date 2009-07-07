@@ -640,9 +640,9 @@ class SelectFieldRenderer(FieldRenderer):
             if len(L[0]) == 2:
                 L = [(v, k) for k, v in L]
             else:
-                L = [(k, _stringify(k)) for k in L]
+                L = [(k, stringify(k)) for k in L]
         D = dict(L)
         if isinstance(value, list):
-            return u', '.join([_stringify(D.get(item, item)) for item in value])
-        return _stringify(D.get(value, value))
+            return u', '.join([stringify(D.get(item, item)) for item in value])
+        return stringify(D.get(value, value))
  
