@@ -73,6 +73,7 @@ Here is a callable exemple::
   >>> print fs3.name.render()
   <select id="User-1-name" name="User-1-name"><option value="">None</option>
   <option value="1">Bill</option></select>
+
 Adding Fields
 -------------
   

@@ -17,12 +17,13 @@ from formalchemy.utils import stringify
 # Removed to prevent circular imports
 #from formalchemy.fields import AbstractField
 
-__all__ = ['FieldRenderer',
+__all__ = ['FieldRenderer', 'SelectFieldRenderer',
            'TextFieldRenderer', 'TextAreaFieldRenderer',
            'PasswordFieldRenderer', 'HiddenFieldRenderer',
            'DateFieldRenderer', 'TimeFieldRenderer',
-           'DateTimeFieldRenderer',
-           'CheckBoxFieldRenderer', 'CheckBoxSet']
+           'DateTimeFieldRenderer', 'EscapingReadonlyRenderer',
+           'CheckBoxFieldRenderer', 'CheckBoxSet',
+           'FileFieldRenderer']
 
 
 
@@ -182,7 +183,7 @@ class FieldRenderer(object):
 
         For example, when coding a renderer:
 
-        >>> vals = self.params.getall(self.name)
+        >>> vals = self.params.getall(self.name)  #doctest: +SKIP
 
         will catch all the values for the renderer's form entry.
         """

@@ -15,8 +15,9 @@ from sqlalchemy.orm.properties import CompositeProperty, ColumnProperty
 from sqlalchemy.exceptions import InvalidRequestError # 0.4 support
 from formalchemy import fatypes, validators, renderers
 from formalchemy.utils import stringify
+from formalchemy.renderers import *
 
-__all__ = ['Field', 'AbstractField', 'AttributeField']
+__all__ = ['Field', 'AbstractField', 'AttributeField'] + renderers.__all__
 
 ################## FIELDS STUFF ####################
 
