@@ -26,11 +26,6 @@ __all__ = ['FieldRenderer', 'SelectFieldRenderer',
            'FileFieldRenderer', 'IntegerFieldRenderer']
 
 
-
-########################## RENDERER STUFF ############################
-
-
-
 def iterable(item):
     try:
         iter(item)

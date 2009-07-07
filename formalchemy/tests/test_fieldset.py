@@ -840,7 +840,7 @@ False
 >>> fs.id = fs.id.required()
 Traceback (most recent call last):
 ...
-AttributeError: Do not set field attributes manually.  Use add() or configure() instead
+AttributeError: Do not set field attributes manually.  Use append() or configure() instead
 
 # join
 >>> fs = FieldSet(Order__User)

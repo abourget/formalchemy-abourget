@@ -17,7 +17,7 @@ __all__ = ['stringify', 'normalized_options', '_pk', '_pk_one_column',
 class _SafeEval(object):
     def visit(self, node,**kw):
         cls = node.__class__
-        meth = getattr(self,'visit'+cls.__name__,self.default)
+        meth = getattr(self, 'visit' + cls.__name__, self.default)
         return meth(node, **kw)
             
     def default(self, node, **kw):
