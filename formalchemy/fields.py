@@ -363,9 +363,8 @@ class AbstractField(object):
         """
         Add the `validator` function to the list of validation
         routines to run when the `FieldSet`'s `validate` method is
-        run. Validator functions take two parameter: the `value` to
-        validate and the `field` being validated.
-        This value will have already been turned into the
+        run. Validator functions take one parameter: the value to
+        validate. This value will have already been turned into the
         appropriate data type for the given `Field` (string, int, float,
         etc.). It should raise `ValidationError` if validation
         fails with a message explaining the cause of failure.
