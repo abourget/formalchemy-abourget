@@ -5,7 +5,7 @@
 
 from formalchemy.i18n import _
 
-__all__ = ['ValidationError', 'requird', 'integer', 'float_', 'decimal_',
+__all__ = ['ValidationError', 'required', 'integer', 'float_', 'decimal_',
            'currency', 'email', 'email_verbose', 'maxlength', 'minlength',
            'regex', 'passwords_match']
 
