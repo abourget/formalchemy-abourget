@@ -13,7 +13,7 @@ from formalchemy import helpers as h
 from formalchemy.i18n import get_translator
 from formalchemy.i18n import _
 from formalchemy import fatypes, validators
-from formalchemy.utils import stringify
+from formalchemy.utils import stringify, normalized_options
 # Removed to prevent circular imports
 #from formalchemy.fields import AbstractField
 
@@ -612,7 +612,12 @@ class SelectFieldRenderer(FieldRenderer):
         return FieldRenderer._serialized_value(self)
 
     def render(self, options, **kwargs):
-        L = list(options)
+        if callable(options):
+            L = normalized_options(options(self.field.parent))
+            if not self.field.is_required() and not self.field.is_collection:
+                L.insert(0, self.field._null_option)
+        else:
+            L = list(options)
         if len(L) > 0:
             if len(L[0]) == 2:
                 L = [(k, self.stringify_value(v)) for k, v in L]
@@ -620,4 +625,29 @@ class SelectFieldRenderer(FieldRenderer):
                 L = [stringify(k) for k in L]
         return h.select(self.name, h.options_for_select(L, selected=self._value), **kwargs)
 
+    def render_readonly(self, options=None, **kwargs):
+        """render a string representation of the field value.
+           Try to retrieve a value from `options`
+        """
+        if not options or self.field.is_scalar_relation:
+            return FieldRenderer.render_readonly(self)
 
+        value = self.field.raw_value
+        if value is None:
+            return ''
+ 
+        if callable(options):
+            L = normalized_options(options(self.field.parent))
+        else:
+            L = list(options)
+
+        if len(L) > 0:
+            if len(L[0]) == 2:
+                L = [(v, k) for k, v in L]
+            else:
+                L = [(k, _stringify(k)) for k in L]
+        D = dict(L)
+        if isinstance(value, list):
+            return u', '.join([_stringify(D.get(item, item)) for item in value])
+        return _stringify(D.get(value, value))
+ 

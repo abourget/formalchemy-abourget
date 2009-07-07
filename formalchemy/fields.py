@@ -9,48 +9,18 @@ logger = logging.getLogger('formalchemy.' + __name__)
 from copy import copy, deepcopy
 import warnings
 
-from sqlalchemy.orm import class_mapper, Query
+from sqlalchemy.orm import class_mapper
 from sqlalchemy.orm.attributes import ScalarAttributeImpl, ScalarObjectAttributeImpl, CollectionAttributeImpl, InstrumentedAttribute
 from sqlalchemy.orm.properties import CompositeProperty, ColumnProperty
 from sqlalchemy.exceptions import InvalidRequestError # 0.4 support
 from formalchemy import fatypes, validators, renderers
-from formalchemy.utils import stringify
+from formalchemy.utils import stringify, normalized_options, query_options
+from formalchemy.utils import _pk, _pk_one_column
 from formalchemy.renderers import *
 
 __all__ = ['Field', 'AbstractField', 'AttributeField'] + renderers.__all__
 
 ################## FIELDS STUFF ####################
-
-
-
-def _pk_one_column(instance, column):
-    try:
-        attr = getattr(instance, column.key)
-    except AttributeError:
-        # FIXME: this is not clean but the only way i've found to retrieve the
-        # real attribute name of the primary key.
-        # This is needed when you use something like:
-        #    id = Column('UGLY_NAMED_ID', primary_key=True)
-        # It's a *really* needed feature
-        cls = instance.__class__
-        for k in instance._sa_class_manager.keys():
-            props = getattr(cls, k).property
-            if hasattr(props, 'columns'):
-                if props.columns[0] is column:
-                    attr = getattr(instance, k)
-                    break
-    return attr
-
-def _pk(instance):
-    # Return the value of this instance's primary key, suitable for passing to Query.get().  
-    # Will be a tuple if PK is multicolumn.
-    try:
-        columns = class_mapper(type(instance)).primary_key
-    except InvalidRequestError:
-        return None
-    if len(columns) == 1:
-        return _pk_one_column(instance, columns[0])
-    return tuple([_pk_one_column(instance, column) for column in columns])
 
 
 # see http://code.activestate.com/recipes/364469/ for explanation.
@@ -90,35 +60,7 @@ def _simple_eval(source):
     return walker.visit(ast)
 
 
-def _query_options(L):
-    """
-    Return a list of tuples of `(item description, item pk)`
-    for each item in the iterable L, where `item description`
-    is the result of str(item) and `item pk` is the item's primary key.
-    """
-    return [(stringify(item), _pk(item)) for item in L]
 
-
-def _normalized_options(options):
-    """
-    If `options` is an SA query or an iterable of SA instances, it will be
-    turned into a list of `(item description, item value)` pairs. Otherwise, a
-    copy of the original options will be returned with no further validation.
-    """
-    if isinstance(options, Query):
-        options = options.all()
-    if callable(options):
-        return options
-    i = iter(options)
-    try:
-        first = i.next()
-    except StopIteration:
-        return []
-    try:
-        class_mapper(type(first))
-    except:
-        return list(options)
-    return _query_options(options)
 
 
 def _foreign_keys(property):
@@ -321,7 +263,7 @@ class AbstractField(object):
                 setattr(self, attr, value)
             elif attr in ('multiple', 'options', 'size'):
                 if attr == 'options' and value is not None:
-                    value = _normalized_options(value)
+                    value = normalized_options(value)
                 self.render_opts[attr] = value
         return self
 
@@ -434,7 +376,7 @@ class AbstractField(object):
         if options is None:
             options = self.render_opts.get('options')
         else:
-            options = _normalized_options(options)
+            options = normalized_options(options)
         field.render_opts = {'options': options}
         return field
     def checkbox(self, options=None):
@@ -444,7 +386,7 @@ class AbstractField(object):
         if options is None:
             options = self.render_opts.get('options')
         else:
-            options = _normalized_options(options)
+            options = normalized_options(options)
         field.render_opts = {'options': options}
         return field
     def dropdown(self, options=None, multiple=False, size=5):
@@ -457,7 +399,7 @@ class AbstractField(object):
         if options is None:
             options = self.render_opts.get('options')
         else:
-            options = _normalized_options(options)
+            options = normalized_options(options)
         field.render_opts = {'multiple': multiple, 'options': options}
         if multiple:
             field.render_opts['size'] = size
@@ -836,7 +778,7 @@ class AttributeField(AbstractField):
             fk_cls = self.relation_type()
             order_by = self._property.order_by or list(class_mapper(fk_cls).primary_key)
             q = self.query(fk_cls).order_by(order_by)
-            self.render_opts['options'] += _query_options(q)
+            self.render_opts['options'] += query_options(q)
             logger.debug('options for %s are %s' % (self.name, self.render_opts['options']))
         if self.is_collection and isinstance(self.renderer, self.parent.default_renderers['dropdown']):
             self.render_opts['multiple'] = True
