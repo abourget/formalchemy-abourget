@@ -13,7 +13,7 @@ from formalchemy import helpers as h
 from formalchemy.i18n import get_translator
 from formalchemy.i18n import _
 from formalchemy import fatypes, validators
-from formalchemy.utils import stringify, normalized_options
+from formalchemy.utils import stringify, normalized_options, simple_eval
 # Removed to prevent circular imports
 #from formalchemy.fields import AbstractField
 
@@ -402,7 +402,7 @@ class HiddenFieldRenderer(FieldRenderer):
 class CheckBoxFieldRenderer(FieldRenderer):
     """render a boolean value as checkbox field"""
     def render(self, **kwargs):
-        return h.check_box(self.name, True, checked=_simple_eval(self._value or ''), **kwargs)
+        return h.check_box(self.name, True, checked=simple_eval(self._value or ''), **kwargs)
     def _serialized_value(self):
         if self.name not in self.params:
             return None

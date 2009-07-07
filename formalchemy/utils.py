@@ -7,8 +7,45 @@
 from formalchemy import config
 from sqlalchemy.orm import Query, class_mapper
 from sqlalchemy.exceptions import InvalidRequestError # 0.4 support
+import compiler
 
-__all__ = ['stringify', 'normalized_options', '_pk', '_pk_one_column']
+__all__ = ['stringify', 'normalized_options', '_pk', '_pk_one_column',
+           'simple_eval']
+
+# see http://code.activestate.com/recipes/364469/ for explanation.
+# 2.6 provides ast.literal_eval, but requiring 2.6 is a bit of a stretch for now
+class _SafeEval(object):
+    def visit(self, node,**kw):
+        cls = node.__class__
+        meth = getattr(self,'visit'+cls.__name__,self.default)
+        return meth(node, **kw)
+            
+    def default(self, node, **kw):
+        for child in node.getChildNodes():
+            return self.visit(child, **kw)
+            
+    visitExpression = default
+    
+    def visitName(self, node, **kw):
+        if node.name in ['True', 'False', 'None']:
+            return eval(node.name)
+
+    def visitConst(self, node, **kw):
+        return node.value
+
+    def visitTuple(self,node, **kw):
+        return tuple(self.visit(i) for i in node.nodes)
+        
+    def visitList(self,node, **kw):
+        return [self.visit(i) for i in node.nodes]
+
+def simple_eval(source):
+    """like 2.6's ast.literal_eval, but only does constants, lists, and tuples, for serialized pk eval"""
+    if source == '':
+        return None
+    walker = _SafeEval()
+    ast = compiler.parse(source, 'eval')
+    return walker.visit(ast)
 
 
 def stringify(k, null_value=u''):

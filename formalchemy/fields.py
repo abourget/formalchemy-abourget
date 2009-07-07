@@ -15,52 +15,10 @@ from sqlalchemy.orm.properties import CompositeProperty, ColumnProperty
 from sqlalchemy.exceptions import InvalidRequestError # 0.4 support
 from formalchemy import fatypes, validators, renderers
 from formalchemy.utils import stringify, normalized_options, query_options
-from formalchemy.utils import _pk, _pk_one_column
+from formalchemy.utils import _pk, _pk_one_column, simple_eval
 from formalchemy.renderers import *
 
 __all__ = ['Field', 'AbstractField', 'AttributeField'] + renderers.__all__
-
-################## FIELDS STUFF ####################
-
-
-# see http://code.activestate.com/recipes/364469/ for explanation.
-# 2.6 provides ast.literal_eval, but requiring 2.6 is a bit of a stretch for now.
-import compiler
-class _SafeEval(object):
-    def visit(self, node,**kw):
-        cls = node.__class__
-        meth = getattr(self,'visit'+cls.__name__,self.default)
-        return meth(node, **kw)
-            
-    def default(self, node, **kw):
-        for child in node.getChildNodes():
-            return self.visit(child, **kw)
-            
-    visitExpression = default
-    
-    def visitName(self, node, **kw):
-        if node.name in ['True', 'False', 'None']:
-            return eval(node.name)
-
-    def visitConst(self, node, **kw):
-        return node.value
-
-    def visitTuple(self,node, **kw):
-        return tuple(self.visit(i) for i in node.nodes)
-        
-    def visitList(self,node, **kw):
-        return [self.visit(i) for i in node.nodes]
-
-def _simple_eval(source):
-    """like 2.6's ast.literal_eval, but only does constants, lists, and tuples, for serialized pk eval"""
-    if source == '':
-        return None
-    walker = _SafeEval()
-    ast = compiler.parse(source, 'eval')
-    return walker.visit(ast)
-
-
-
 
 
 def _foreign_keys(property):
@@ -793,10 +751,11 @@ class AttributeField(AbstractField):
 
     @_cache_deserialize
     def _deserialize(self):
-        # for multicolumn keys, we turn the string into python via _simple_eval; otherwise,
-        # the key is just the raw deserialized value (which is already an int, etc., as necessary)
+        # for multicolumn keys, we turn the string into python via
+        # FA's utils.simple_eval; otherwise, the key is just the raw
+        # deserialized value (which is already an int, etc., as necessary)
         if len(self._columns) > 1:
-            python_pk = _simple_eval
+            python_pk = simple_eval
         else:
             python_pk = lambda st: st
 
