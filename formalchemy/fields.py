@@ -310,7 +310,7 @@ class AbstractField(object):
     def hidden(self):
         """Render the field hidden.  (Value only, no label.)"""
         return self._modified(_renderer=renderers.HiddenFieldRenderer,
-                              xrender_opts={})
+                              render_opts={})
     def password(self):
         """Render the field as a password input, hiding its value."""
         field = deepcopy(self)
