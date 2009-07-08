@@ -33,7 +33,6 @@ rendered.
 # Test append
 # Test insert_after
 # Test insert_at_index
-# Test remove() (remove from docs and changelog)
 # Test caching system, including rebind
 #   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
 # Test .value_objects

@@ -219,6 +219,19 @@ Then you could use it in your framework controllers as::
 
 where post_data would (in Pylons) be something like `request.POST`.
 
+It's also possible to remove a `Field` from a `FieldSet`, e.g. when you want
+to disallow a user to modify a field, based on certain conditions:
+
+  >>> del fs.passwd1
+  >>> del fs.passwd2
+
+This will display a `FieldSet` without those two fields.
+
+If you want to make on field read-only (based on permissions for example),
+you can modify a Field in place using the `modify()` method::
+
+  >>> fs.modify(fs.email.readonly())  #doctest: +ELLIPSIS
+  <...FieldSet object ...>
 
 Including data from more than one class
 =======================================

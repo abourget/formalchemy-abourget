@@ -17,7 +17,7 @@ Post 1.2.1
   renderers.py - you can fix your code by just renaming the imports of
   everything dealing with *Renderers objects.
 
-* added `modify`, `insert_after`, `insert_at_index`, `remove` to modify a
+* added `modify`, `insert_after`, `insert_at_index` to modify a
   FieldSet object after creation.
 
 * validators are now passed as second argument the `field` being validated.

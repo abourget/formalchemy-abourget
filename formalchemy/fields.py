@@ -68,7 +68,7 @@ class AbstractField(object):
 
     >>> from formalchemy.tests import FieldSet, User
     >>> fs = FieldSet(User)
-    >>> fs.add(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())
+    >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())
 
     or::
 
@@ -480,7 +480,7 @@ class Field(AbstractField):
     A manually-added form field.
 
     This is the object that will be used if you create a field and add
-    it to a FieldSet using the `add()` method. Default values will be
+    it to a FieldSet using the `append()` method. Default values will be
     the one passed as the `value` parameter. Raw model value will be that
     default value also.
 
