@@ -187,7 +187,7 @@ class ModelRenderer(object):
                     if field.name and field.name != key:
                         raise Exception('Fields in a non-mapped class have the same name as their attribute.  Do not manually give them a name.')
                     field.name = field.key = key
-                    self.add(field)
+                    self.append(field)
             if not self._fields:
                 raise Exception("not bound to a SA instance, and no manual Field definitions found")
         else:
@@ -476,7 +476,7 @@ class ModelRenderer(object):
                 if not isinstance(field, fields.AbstractField):
                     raise TypeError('non-AbstractField object `%s` found in `%s`' % (field, iterable))
                 if field not in self._fields.values():
-                    raise ValueError('Unrecognized Field `%s` in `%s` -- did you mean to call add() first?' % (field, iterable))
+                    raise ValueError('Unrecognized Field `%s` in `%s` -- did you mean to call append() first?' % (field, iterable))
 
         # if include is given, those are the fields used.  otherwise, include those not explicitly (or implicitly) excluded.
         if not include:

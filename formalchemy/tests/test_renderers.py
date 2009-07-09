@@ -76,7 +76,6 @@ After rebind:
   >>> assert fs2.passwd1.value == 'other', "Rebind didn't clear cache"
 
 # Test .value_objects
-# Test passwords_match
 # Test with a standard/best way to create a FieldSet (custom Class, function that generates a FieldSet ?)
 # Test global_validators, being passed to configure() or remove it
   # take from my changeset that fixed configure(), there were some good things
