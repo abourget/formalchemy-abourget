@@ -9,19 +9,22 @@ All `FormAlchemy`'s objects live under the `formalchemy` package
 
   >>> from formalchemy import FieldSet, Field
 
-:mod:`~formalchemy.validators`::
-
-  >>> from formalchemy import validators, ValidationError
-
-For manual Field definition::
-
-  >>> from formalchemy import types
-
 :mod:`~formalchemy.tables` for collection rendering::
 
   >>> from formalchemy import Grid
 
-Advanced :mod:`~formalchemy.fields` customization::
+:mod:`~formalchemy.validators`::
+
+  >>> from formalchemy import validators, ValidationError
+
+For manual Field definition, get the renderers::
+
+  >>> from formalchemy.renderers import *
+
+From those, you should get a bunch of `SomethingRenderer` objects, which you
+assign to the Field() definitions
+
+For more advanced :mod:`~formalchemy.fields` customization::
 
   >>> from formalchemy import FieldRenderer, AbstractFieldSet
 

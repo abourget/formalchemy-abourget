@@ -59,7 +59,7 @@ Stress-test the bind() / rebind() and caching engine:
 
   >>> post_data = [('User--passwd1', 'pass'), ('User--passwd2', 'pass'),
   ...              ('User--name', 'blah'), ('User--email', 'blah@example.com')]
-  >>> fs2 = UserFieldSet().bind(User, data=post_data or None)
+  >>> fs2 = UserFieldSet().bind(data=post_data or None)
   >>> fs2.validate()
   True
   >>> fs2.sync()

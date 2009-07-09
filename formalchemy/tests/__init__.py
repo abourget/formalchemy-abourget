@@ -365,6 +365,18 @@ class UserFieldSet(FieldSet):
 
 original_renderers = FieldSet.default_renderers.copy()
 
+# Fake Pylons request.params objects
+class FakeRequest:
+    pass
+request = FakeRequest()
+#request.params = [('User--email', u'super@email.com'),
+#                  ('User--password', u'pass'),
+#                  ('User--name', u'Super Name'),
+#                  ]
+request.params = [('Order-1-user_id', u'1'),
+                  ('Order-1-quantity', u'10'),
+                  ]
+
 def configure_and_render(fs, **options):
     fs.configure(**options)
     return fs.render()

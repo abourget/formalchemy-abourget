@@ -237,7 +237,7 @@ You can write your own validator, with the following function signature. The
 `field` parameter will be the `Field` object being validated (and though its
 `.parent` attribute, the `FieldSet`::
 
-  >>> def negative(value):
+  >>> def negative(value, field):
   ...     if not (isinstance(value, int) and value < 0):
   ...         raise ValidationError('Value must be less than 0')
 
