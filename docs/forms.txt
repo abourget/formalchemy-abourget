@@ -189,24 +189,10 @@ You can customize your FieldSet, and create a ready-made derived version
 for when you need it in your application. For example, you could create
 one FieldSet per model object in your application.
 
-In this example, we create a FieldSet to edit the `User` model object::
+In this example, we create a FieldSet to edit the `User` model object:
 
-  >>> from formalchemy import validators
-  >>> class UserFieldSet(FieldSet):
-  ...     """Used to edit users"""
-  ...     def __init__(self):
-  ...         """Pre-configuration"""
-  ...         FieldSet.__init__(self, User)
-  ...         
-  ...         self.append(Field('passwd1'))
-  ...         self.append(Field('passwd2'))
-  ...         inc = [self.name,
-  ...                self.passwd1.password().label(u'Password'),
-  ...                self.passwd2.password().label(u'Confirm') \
-  ...                    .validate(validators.passwords_match('passwd1')),
-  ...                self.email,
-  ...                ]
-  ...         self.configure(include=inc)
+.. literalinclude:: ../formalchemy/tests/__init__.py
+   :pyobject: UserFieldSet
 
 Then you could use it in your framework controllers as::
 

@@ -299,6 +299,7 @@ from formalchemy.tables import Grid as DefaultGrid
 from formalchemy.fields import Field
 from formalchemy import templates
 from formalchemy.validators import ValidationError
+from formalchemy import validators
 
 if templates.HAS_MAKO:
     if not isinstance(config.engine, templates.MakoEngine):
@@ -345,6 +346,22 @@ class Grid(DefaultGrid):
             html_engine = pretty_html(engine('grid', collection=self))
             assert html == html_engine, (name, html, html_engine)
         return html
+
+class UserFieldSet(FieldSet):
+    """Used to edit users"""
+    def __init__(self):
+        """Pre-configuration"""
+        FieldSet.__init__(self, User)
+        
+        self.append(Field('passwd1'))
+        self.append(Field('passwd2'))
+        inc = [self.name,
+               self.passwd1.password().label(u'Password'),
+               self.passwd2.password().label(u'Confirm') \
+                   .validate(validators.passwords_match('passwd1')),
+               self.email,
+               ]
+        self.configure(include=inc)
 
 original_renderers = FieldSet.default_renderers.copy()
 

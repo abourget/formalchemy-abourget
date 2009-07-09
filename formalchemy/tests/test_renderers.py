@@ -54,6 +54,27 @@ Kind of the same thing with insert_at_index:
 #   - Show set() modifies IN-PLACE
 # Test caching system, including rebind
 #   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
+
+Stress-test the bind() / rebind() and caching engine:
+
+  >>> post_data = [('User--passwd1', 'pass'), ('User--passwd2', 'pass'),
+  ...              ('User--name', 'blah'), ('User--email', 'blah@example.com')]
+  >>> fs2 = UserFieldSet().bind(User, data=post_data or None)
+  >>> fs2.validate()
+  True
+  >>> fs2.sync()
+  >>> fs2.model.password = fs2.passwd1.value
+
+After rebind:
+
+  >>> post_data = [('User--passwd1', 'other'), ('User--passwd2', 'other'),
+  ...              ('User--name', 'blah'), ('User--email', 'blah@example.com')]
+  >>> fs2.rebind(data=post_data)
+  >>> fs2.validate()
+  True
+  >>> fs2.sync()
+  >>> assert fs2.passwd1.value == 'other', "Rebind didn't clear cache"
+
 # Test .value_objects
 # Test passwords_match
 # Test with a standard/best way to create a FieldSet (custom Class, function that generates a FieldSet ?)
