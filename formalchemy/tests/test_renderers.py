@@ -50,6 +50,8 @@ Kind of the same thing with insert_at_index:
   >>> fs._render_fields.keys()
   ['email', 'password', 'name', 'passwd1', 'passwd2', 'orders']
 
+# Test set/get in the Field and the Renderer.
+#   - Show set() modifies IN-PLACE
 # Test caching system, including rebind
 #   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
 # Test .value_objects

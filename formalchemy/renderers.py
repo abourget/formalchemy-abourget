@@ -142,6 +142,13 @@ class FieldRenderer(object):
         return self.field.parent.errors
     errors = property(errors)
 
+    def get(self, key, default):
+        """This method gives a quick access to the Field's `get()` method.
+        
+        Any setting set with `set()` on the Field will be accessible here.
+        """
+        return self.field.render_opts(key, default) # or self.field.get(k,d..)
+
     def render(self, **kwargs):
         """
         Render the field.  Use `self.name` to get a unique name for the

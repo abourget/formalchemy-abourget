@@ -226,6 +226,14 @@ class AbstractField(object):
                 self.render_opts[attr] = value
         return self
 
+    def get(self, key, default=None):
+        """Return the setting for this key. Complements `set()`.
+
+        This function works a little bit like the `dict` method `get()`,
+        as it accepts a second parameter whic his the default value.
+        """
+        return self.render_opts.get(key, default)
+
     def with_null_as(self, option):
         """Render null as the given option tuple of text, value."""
         return self._modified(_null_option=option)
