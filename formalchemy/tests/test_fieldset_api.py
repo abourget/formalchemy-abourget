@@ -5,13 +5,15 @@ from formalchemy.fields import PasswordFieldRenderer
 def append():
     """
     >>> fs = FieldSet(User)
-    >>> fs.append(Field('added'))
+    >>> fs.append(Field('added'))  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'password', 'name', 'orders', 'added']
 
     >>> fs = FieldSet(User)
     >>> fs.configure()
-    >>> fs.append(Field('added'))
+    >>> fs.append(Field('added'))  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'password', 'name', 'orders']
     >>> fs._render_fields.keys()
@@ -21,7 +23,8 @@ def append():
 def extend():
     """
     >>> fs = FieldSet(User)
-    >>> fs.extend([Field('added')])
+    >>> fs.extend([Field('added')])  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'password', 'name', 'orders', 'added']
     >>> fs._render_fields.keys()
@@ -31,7 +34,8 @@ def extend():
 
     >>> fs = FieldSet(User)
     >>> fs.configure()
-    >>> fs.extend([Field('added')])
+    >>> fs.extend([Field('added')])  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'password', 'name', 'orders']
     >>> fs._render_fields.keys()
@@ -43,7 +47,8 @@ def extend():
 def insert():
     """
     >>> fs = FieldSet(User)
-    >>> fs.insert(fs.password, Field('login'))
+    >>> fs.insert(fs.password, Field('login'))  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'login', 'password', 'name', 'orders']
     >>> fs._render_fields.keys()
@@ -53,7 +58,8 @@ def insert():
 
     >>> fs = FieldSet(User)
     >>> fs.configure()
-    >>> fs.insert(fs.password, Field('login'))
+    >>> fs.insert(fs.password, Field('login'))  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> fs._fields.keys()
     ['id', 'email', 'password', 'name', 'orders']
     >>> fs._render_fields.keys()
@@ -84,13 +90,14 @@ def delete():
 
     """
 
-def field_update():
+def field_set():
     """
     >>> fs = FieldSet(User)
-    >>> fs.insert(fs.password, Field('login'))
+    >>> fs.insert(fs.password, Field('login'))  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
     >>> def validate(value, field):
     ...     if len(value) < 2: raise ValidationError('Need more than 2 chars')
-    >>> fs.password.update(renderer=PasswordFieldRenderer, validate=validate)
+    >>> fs.password.set(renderer=PasswordFieldRenderer, validate=validate)
     AttributeField(password)
     >>> fs.password.renderer
     <PasswordFieldRenderer for AttributeField(password)>
@@ -102,7 +109,7 @@ def field_update():
     <PasswordFieldRenderer for AttributeField(password)>
     >>> field.raw_value
     'passwd'
-    >>> field.update(value='new_passwd')
+    >>> field.set(value='new_passwd')
     AttributeField(password)
     >>> field.raw_value
     'new_passwd'

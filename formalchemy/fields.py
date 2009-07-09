@@ -68,7 +68,8 @@ class AbstractField(object):
 
     >>> from formalchemy.tests import FieldSet, User
     >>> fs = FieldSet(User)
-    >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())
+    >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())  #doctest: +ELLIPSIS
+    <formalchemy.tests.FieldSet object ...>
 
     or::
 
@@ -192,14 +193,14 @@ class AbstractField(object):
             setattr(copied, attr, value)
         return copied
 
-    def update(self, **kwattrs):
+    def set(self, **kwattrs):
         """
-        Update field attributes in place. Allowed attributes are: validate,
+        Update field settings in place. Allowed attributes are: validate,
         renderer, readonly, nul_as, label, multiple, options, size::
 
             >>> field = Field('myfield')
-            >>> field.update(label='My field', renderer=SelectFieldRenderer,
-            ...              options=[('Value', 1)])
+            >>> field.set(label='My field', renderer=SelectFieldRenderer,
+            ...           options=[('Value', 1)])
             AttributeField(myfield)
             >>> field.label_text
             'My field'
@@ -524,12 +525,12 @@ class Field(AbstractField):
         self._value = value
         self.is_relation = False
         self.is_scalar_relation = False
-        self.update(**kwattrs)
+        self.set(**kwattrs)
 
-    def update(self, **kwattrs):
+    def set(self, **kwattrs):
         if 'value' in kwattrs:
             self._value = kwattrs.pop('value')
-        return AbstractField.update(self, **kwattrs)
+        return AbstractField.set(self, **kwattrs)
 
     def model_value(self):
         return self.raw_value

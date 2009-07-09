@@ -217,6 +217,7 @@ class ModelRenderer(object):
         field.parent = self
         _fields = self._render_fields or self._fields
         _fields[field.name] = field
+        return self  # Cascade pattern
 
     def add(self, field):
         warnings.warn(DeprecationWarning('FieldSet.add is deprecated. Use FieldSet.append instead.'))
@@ -227,6 +228,7 @@ class ModelRenderer(object):
         rendered form or table."""
         for field in fields:
             self.append(field)
+        return self  # Cascade pattern
 
     def insert(self, field, new_field):
         """Insert a new field before an existing field"""
@@ -247,6 +249,7 @@ class ModelRenderer(object):
             self._render_fields = OrderedDict(items)
         else:
             self._fields = OrderedDict(items)
+        return self  # Cascade pattern
             
     def modify(self, *args):
         """Modify fields with their new value, without modifying the order"""

@@ -4,8 +4,8 @@ import datetime
 
 
 __doc__ = r"""
-# Deprecate importing Renderers from fields.py (necessary ?)
-#   see http://groups.google.com/group/formalchemy/browse_thread/thread/3f07828660c42b31
+Let's test the behavior of a Field element, returning a modified copy of itself
+when we call some methods on it:
 
   >>> fs = FieldSet(User)
   >>> fs.password
@@ -24,14 +24,21 @@ Now let's try to modify it. First, we call configure(), so that the fields of
 the model are "copied" to the `render_fields` - the fields to actually be
 rendered.
 
->>> fs.configure()
->>> fs.modify(fs.password.with_renderer(PasswordFieldRenderer))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet object ...>
->>> fs.password.renderer
-<PasswordFieldRenderer for AttributeField(password)>
+  >>> fs.configure()
+  >>> fs.modify(fs.password.with_renderer(PasswordFieldRenderer))  #doctest: +ELLIPSIS
+  <formalchemy.tests.FieldSet object ...>
+  >>> fs.password.renderer
+  <PasswordFieldRenderer for AttributeField(password)>
 
-# Test append
+# Test append - tested in test_fieldset_api.py
+
 # Test insert_after
+Continuing with this `fs`:
+
+  >>> fs.append(Field('passwd1'))  #doctest: +ELLIPSIS
+  <formalchemy.tests.FieldSet object ...>
+  >>> 
+
 # Test insert_at_index
 # Test caching system, including rebind
 #   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
