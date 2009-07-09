@@ -30,16 +30,26 @@ rendered.
   >>> fs.password.renderer
   <PasswordFieldRenderer for AttributeField(password)>
 
-# Test append - tested in test_fieldset_api.py
-
-# Test insert_after
-Continuing with this `fs`:
+Continuing with this `fs`, testing `insert_after`:
 
   >>> fs.append(Field('passwd1'))  #doctest: +ELLIPSIS
   <formalchemy.tests.FieldSet object ...>
-  >>> 
+  >>> fs.insert_after('name', fs.passwd1)  #doctest: +ELLIPSIS
+  <formalchemy.tests.FieldSet object ...>
+  >>> fs._fields.keys()
+  ['id', 'email', 'password', 'name', 'orders']
+  >>> fs._render_fields.keys()
+  ['email', 'password', 'name', 'passwd1', 'orders']
 
-# Test insert_at_index
+Kind of the same thing with insert_at_index:
+
+  >>> fs.append(Field('passwd2'))  #doctest: +ELLIPSIS
+  <formalchemy.tests.FieldSet object ...>
+  >>> fs.insert_at_index(4, fs.passwd2)  #doctest: +ELLIPSIS
+  <formalchemy.tests.FieldSet object ...>
+  >>> fs._render_fields.keys()
+  ['email', 'password', 'name', 'passwd1', 'passwd2', 'orders']
+
 # Test caching system, including rebind
 #   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
 # Test .value_objects
