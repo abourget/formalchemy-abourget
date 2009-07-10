@@ -705,7 +705,8 @@ True
 
 # Field
 >>> fs = FieldSet(One)
->>> fs.add(Field('foo'))
+>>> fs.append(Field('foo'))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> print configure_and_render(fs, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -715,7 +716,8 @@ True
 </div>
 
 >>> fs = FieldSet(One)
->>> fs.add(Field('foo', types.Integer, value=2))
+>>> fs.append(Field('foo', types.Integer, value=2))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> fs.foo.value
 2
 >>> print configure_and_render(fs, focus=None)
@@ -763,7 +765,8 @@ True
 <input id="Manual--a" name="Manual--a" type="text" value="asdf" />
 
 >>> fs = FieldSet(One)
->>> fs.add(Field('foo', types.Integer, value=2).dropdown(options=[('1', 1), ('2', 2)]))
+>>> fs.append(Field('foo', types.Integer, value=2).dropdown(options=[('1', 1), ('2', 2)]))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> print configure_and_render(fs, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -784,13 +787,15 @@ True
 True
 
 >>> fs2 = FieldSet(One)
->>> fs2.add(Field('foo', types.Integer, value=2))
+>>> fs2.append(Field('foo', types.Integer, value=2))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> fs2.configure(options=[fs2.foo.dropdown(options=[('1', 1), ('2', 2)])], focus=None)
 >>> fs.render() == fs2.render()
 True
 
 >>> fs_1 = FieldSet(One)
->>> fs_1.add(Field('foo', types.Integer, value=[2, 3]).dropdown(options=[('1', 1), ('2', 2), ('3', 3)], multiple=True))
+>>> fs_1.append(Field('foo', types.Integer, value=[2, 3]).dropdown(options=[('1', 1), ('2', 2), ('3', 3)], multiple=True))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> print configure_and_render(fs_1, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -815,10 +820,12 @@ True
 
 # test attribute names
 >>> fs = FieldSet(One)
->>> fs.add(Field('foo'))
+>>> fs.append(Field('foo'))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> fs.foo == fs['foo']
 True
->>> fs.add(Field('add'))
+>>> fs.append(Field('add'))  #doctest: +ELLIPSIS
+<formalchemy.tests.FieldSet ...>
 >>> fs.add == fs['add']
 False
 
@@ -1054,7 +1061,7 @@ True
 >>> fs_bad.configure(include=[Field('invalid')])
 Traceback (most recent call last):
 ...
-ValueError: Unrecognized Field `AttributeField(invalid)` in `include` -- did you mean to call add() first?
+ValueError: Unrecognized Field `AttributeField(invalid)` in `include` -- did you mean to call append() first?
 
 >>> fs_s = FieldSet(Synonym)
 >>> fs_s._fields

@@ -67,17 +67,18 @@ class AbstractField(object):
     Options can be "chained" indefinitely because each modification returns a new
     :mod:`Field <formalchemy.fields>` instance, so you can write::
 
-    >>> from formalchemy.tests import FieldSet, User
-    >>> fs = FieldSet(User)
-    >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())  #doctest: +ELLIPSIS
-    <formalchemy.tests.FieldSet object ...>
+      >>> from formalchemy.tests import FieldSet, User
+      >>> fs = FieldSet(User)
+      >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())  #doctest: +ELLIPSIS
+      <formalchemy.tests.FieldSet object ...>
 
     or::
 
-    >>> fs.configure(options=[fs.name.label('Username').readonly()])
+      >>> fs.configure(options=[fs.name.label('Username').readonly()])
 
     Here is a callable exemple::
 
+      >>> from formalchemy.tests import bill
       >>> def custom_query(fs):
       ...     return fs.session.query(User).filter(User.name=='Bill')
       >>> fs3 = FieldSet(bill)
