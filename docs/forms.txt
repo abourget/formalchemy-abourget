@@ -62,18 +62,6 @@ Field Modification
 :mod:`Field <formalchemy.fields>` rendering can be modified with methods called on the Field object. See :doc:`fields` for full documentation.
 
 
-- a callable that return one of those cases. Used to evaluate options each time.
-
-Here is a callable exemple::
-
-  >>> def custom_query(fs):
-  ...     return fs.session.query(User).filter(User.name=='Bill')
-  >>> fs3 = FieldSet(bill)
-  >>> fs3.configure(options=[fs3.name.dropdown(options=custom_query)])
-  >>> print fs3.name.render()
-  <select id="User-1-name" name="User-1-name"><option value="">None</option>
-  <option value="1">Bill</option></select>
-
 Adding Fields
 -------------
 

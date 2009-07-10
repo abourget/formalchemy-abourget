@@ -62,6 +62,7 @@ class AbstractField(object):
     - a SQLAlchemy query; the query will be executed with `all()` and the objects returned evaluated as above
     - an iterable of (description, value) pairs
     - a dictionary of {description: value} pairs
+    - a callable that return one of those cases. Used to evaluate options each time.
 
     Options can be "chained" indefinitely because each modification returns a new
     :mod:`Field <formalchemy.fields>` instance, so you can write::
@@ -74,6 +75,17 @@ class AbstractField(object):
     or::
 
     >>> fs.configure(options=[fs.name.label('Username').readonly()])
+
+    Here is a callable exemple::
+
+      >>> def custom_query(fs):
+      ...     return fs.session.query(User).filter(User.name=='Bill')
+      >>> fs3 = FieldSet(bill)
+      >>> fs3.configure(options=[fs3.name.dropdown(options=custom_query)])
+      >>> print fs3.name.render()
+      <select id="User-1-name" name="User-1-name"><option value="">None</option>
+      <option value="1">Bill</option></select>
+
 
     """
     _null_option = (u'None', u'')
