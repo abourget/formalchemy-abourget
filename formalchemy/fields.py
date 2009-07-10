@@ -209,9 +209,10 @@ class AbstractField(object):
     def set(self, **kwattrs):
         """
         Update field settings in place. Allowed attributes are: validate,
-        renderer, readonly, nul_as, label, multiple, options, size. You can
-        also specify custom settings, like 'help', 'separator', 'stack' or
-        anything you could use in your templates to make your life easier.
+        renderer, required, readonly, nul_as, label, multiple, options, size.
+        You can also specify custom settings, like 'help', 'separator',
+        'stack' or anything you could use in your templates to make your
+        life easier.
 
             >>> field = Field('myfield')
             >>> field.set(label='My field', renderer=SelectFieldRenderer,
@@ -237,6 +238,13 @@ class AbstractField(object):
                     self.validators.append(value)
                 else:
                     raise ValueError("set(validate=...) must be called with either a callable or a list/tuple")
+            elif attr == 'required':
+                if value:
+                    if validators.required not in self.validators:
+                        self.validators.append(validators.required)
+                else:
+                    if validators.required in self.validators:
+                        self.validators.remove(validators.required)
             elif attr in mapping:
                 attr = mapping.get(attr)
                 setattr(self, attr, value)

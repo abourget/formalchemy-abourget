@@ -108,7 +108,43 @@ Test the validate/extend combination:
   Traceback (most recent call last):
   ...
   ValueError: set(validate=...) must be called with either a callable or a list/tuple
-  
+
+
+Test setting special ones:
+
+  >>> fs.name.validators = []
+
+  >>> fs.name.set(required=True)
+  AttributeField(name)
+  >>> fs.name.is_required()
+  True
+  >>> fs.name.validators  #doctest: +ELLIPSIS
+  [<function required at ...>]
+
+Shouldn't add it again (')
+
+  >>> fs.name.set(required=True)
+  AttributeField(name)
+  >>> fs.name.is_required()
+  True
+  >>> fs.name.validators  #doctest: +ELLIPSIS
+  [<function required at ...>]
+
+Should remove the required validator from validators.
+
+  >>> fs.name.set(required=False)
+  AttributeField(name)
+  >>> fs.name.is_required()
+  False
+  >>> fs.name.validators
+  []
+
+Shouldn't crash, even if it's not there anymore.
+
+  >>> fs.name.set(required=False)
+  AttributeField(name)
+  >>> fs.name.validators
+  []
 
 # Test with a standard/best way to create a FieldSet (custom Class, function that generates a FieldSet ?)
 # Test global_validators, being passed to configure() or remove it

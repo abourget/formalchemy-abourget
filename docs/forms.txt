@@ -216,7 +216,7 @@ you can modify a Field in place using the `modify()` method::
 You can also use the new ``set()`` method that changes settings *in-place*:
 
   >>> fs.email.set(readonly=True)
-  <UserFieldSet (configured) with ['name', 'email']>
+  AttributeField(email)
   >>> fs.email.is_readonly()
   True
 
