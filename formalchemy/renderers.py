@@ -142,12 +142,12 @@ class FieldRenderer(object):
         return self.field.parent.errors
     errors = property(errors)
 
-    def get(self, key, default):
+    def get(self, attr, default=None):
         """This method gives a quick access to the Field's `get()` method.
         
         Any setting set with `set()` on the Field will be accessible here.
         """
-        return self.field.render_opts(key, default) # or self.field.get(k,d..)
+        return self.field.get(attr, default)
 
     def render(self, **kwargs):
         """

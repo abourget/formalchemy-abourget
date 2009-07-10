@@ -50,9 +50,6 @@ Kind of the same thing with insert_at_index:
   >>> fs._render_fields.keys()
   ['email', 'password', 'name', 'passwd1', 'passwd2', 'orders']
 
-# Test set/get in the Field and the Renderer.
-#   - Show set() modifies IN-PLACE
-
 Stress-test the bind() / rebind() and caching engine:
 
   >>> post_data = [('User--passwd1', 'pass'), ('User--passwd2', 'pass'),
@@ -73,24 +70,64 @@ After rebind:
   >>> fs2.sync()
   >>> assert fs2.passwd1.value == 'other', "Rebind didn't clear cache"
 
-# Test .value_objects
+# Test set/get in the Field and the Renderer.
+#   - Show set() modifies IN-PLACE
+
+Test set/get
+
+  >>> fs = FieldSet(User.query.first())
+  >>> fs.name.set(label=u"Your name", help=u"Just enter your name")
+  AttributeField(name)
+  >>> fs.name.get('label')
+  u'Your name'
+  >>> fs.name.get('help')
+  u'Just enter your name'
+  >>> fs.name.get('some_other', u"Default value")
+  u'Default value'
+  >>> fs.name.renderer
+  <TextFieldRenderer for AttributeField(name)>
+  >>> fs.name.renderer.get('label') == fs.name.get('label')
+  True
+  >>> fs.name.set(validate=lambda x: x)
+  AttributeField(name)
+  >>> fs.name.validators  #doctest: +ELLIPSIS
+  [<function <lambda> at ...>]
+  >>> fs.name.set(validate=lambda y: y)
+  AttributeField(name)
+  >>> fs.name.validators  #doctest: +ELLIPSIS
+  [<function <lambda> at ...>, <function <lambda> at ...>]
+
+Test the validate/extend combination:
+
+  >>> fs.name.set(validate=[lambda x: x, lambda y: y])
+  AttributeField(name)
+  >>> fs.name.validators  #doctest: +ELLIPSIS
+  [<function <lambda> at ...>, <function <lambda> at ...>, <function <lambda> at ...>, <function <lambda> at ...>]
+
+  >>> fs.name.set(validate='crash')
+  Traceback (most recent call last):
+  ...
+  ValueError: set(validate=...) must be called with either a callable or a list/tuple
+  
+
 # Test with a standard/best way to create a FieldSet (custom Class, function that generates a FieldSet ?)
 # Test global_validators, being passed to configure() or remove it
   # take from my changeset that fixed configure(), there were some good things
   # in there anyway.
-# Test the new configure() with plenty of tests, incrementally
 # Test focus on configure(), readonly with previous settings (set in __init__ ?)
 
-# Test set() (rename from update)
-# Test get()
-#   on renderers, and fields
-# Pylons Admin app configurable
-#   see http://groups.google.com/group/formalchemy/browse_thread/thread/a4dd3fa2ffd3b184
 # Remove with_metadata (superseded by set()/get())
 # Change with_html to html()
-# Change Field in-place
+# Renderers should say for themselves which settings they're going to use '
+#   and those settings can have different meanings for different renderers.
+# These should be well documented in each Renderer's __doc__ ... '
 # Document (in examples) how to create stacks, with custom settings
 #   Example of how to use set(help=u"blah") and show it in the template
+
+
+# Test .value_objects
+#   - Re-test in my app instead, wouldn't raw_value do the same ? '
+
 """
 
 if __name__ == '__main__':

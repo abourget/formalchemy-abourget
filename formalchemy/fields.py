@@ -209,7 +209,9 @@ class AbstractField(object):
     def set(self, **kwattrs):
         """
         Update field settings in place. Allowed attributes are: validate,
-        renderer, readonly, nul_as, label, multiple, options, size::
+        renderer, readonly, nul_as, label, multiple, options, size. You can
+        also specify custom settings, like 'help', 'separator', 'stack' or
+        anything you could use in your templates to make your life easier.
 
             >>> field = Field('myfield')
             >>> field.set(label='My field', renderer=SelectFieldRenderer,
@@ -229,23 +231,36 @@ class AbstractField(object):
         for attr in attrs:
             value = kwattrs.pop(attr)
             if attr == 'validate':
-                self.validators.append(value)
+                if isinstance(value, (list, tuple)):
+                    self.validators.extend(value)
+                elif callable(value):
+                    self.validators.append(value)
+                else:
+                    raise ValueError("set(validate=...) must be called with either a callable or a list/tuple")
             elif attr in mapping:
                 attr = mapping.get(attr)
                 setattr(self, attr, value)
-            elif attr in ('multiple', 'options', 'size'):
+            else:
+                # All others too
                 if attr == 'options' and value is not None:
                     value = normalized_options(value)
                 self.render_opts[attr] = value
         return self
 
-    def get(self, key, default=None):
-        """Return the setting for this key. Complements `set()`.
+    def get(self, attr, default=None):
+        """Return the setting for this attr. Complements `set()`.
 
         This function works a little bit like the `dict` method `get()`,
-        as it accepts a second parameter whic his the default value.
+        as it accepts a second parameter which is the default value.
         """
-        return self.render_opts.get(key, default)
+        mapping = dict(renderer='_renderer',
+                       readonly='_readonly',
+                       null_as='_null_option',
+                       label='label_text')
+        if attr in mapping:
+            return getattr(self, mapping[attr], default)
+        else:
+            return self.render_opts.get(attr, default)
 
     def with_null_as(self, option):
         """Render null as the given option tuple of text, value."""
