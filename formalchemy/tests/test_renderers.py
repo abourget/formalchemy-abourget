@@ -25,17 +25,17 @@ the model are "copied" to the `render_fields` - the fields to actually be
 rendered.
 
   >>> fs.configure()
-  >>> fs.modify(fs.password.with_renderer(PasswordFieldRenderer))  #doctest: +ELLIPSIS
-  <formalchemy.tests.FieldSet object ...>
+  >>> fs.modify(fs.password.with_renderer(PasswordFieldRenderer))
+  <FieldSet (configured) with ['email', 'password', 'name', 'orders']>
   >>> fs.password.renderer
   <PasswordFieldRenderer for AttributeField(password)>
 
 Continuing with this `fs`, testing `insert_after`:
 
-  >>> fs.append(Field('passwd1'))  #doctest: +ELLIPSIS
-  <formalchemy.tests.FieldSet object ...>
-  >>> fs.insert_after('name', fs.passwd1)  #doctest: +ELLIPSIS
-  <formalchemy.tests.FieldSet object ...>
+  >>> fs.append(Field('passwd1'))
+  <FieldSet (configured) with ['email', 'password', 'name', 'orders', 'passwd1']>
+  >>> fs.insert_after('name', fs.passwd1)
+  <FieldSet (configured) with ['email', 'password', 'name', 'passwd1', 'orders']>
   >>> fs._fields.keys()
   ['id', 'email', 'password', 'name', 'orders']
   >>> fs._render_fields.keys()
@@ -43,17 +43,15 @@ Continuing with this `fs`, testing `insert_after`:
 
 Kind of the same thing with insert_at_index:
 
-  >>> fs.append(Field('passwd2'))  #doctest: +ELLIPSIS
-  <formalchemy.tests.FieldSet object ...>
-  >>> fs.insert_at_index(4, fs.passwd2)  #doctest: +ELLIPSIS
-  <formalchemy.tests.FieldSet object ...>
+  >>> fs.append(Field('passwd2'))
+  <FieldSet (configured) with ['email', 'password', 'name', 'passwd1', 'orders', 'passwd2']>
+  >>> fs.insert_at_index(4, fs.passwd2)
+  <FieldSet (configured) with ['email', 'password', 'name', 'passwd1', 'passwd2', 'orders']>
   >>> fs._render_fields.keys()
   ['email', 'password', 'name', 'passwd1', 'passwd2', 'orders']
 
 # Test set/get in the Field and the Renderer.
 #   - Show set() modifies IN-PLACE
-# Test caching system, including rebind
-#   see http://groups.google.com/group/formalchemy/browse_thread/thread/958887f41ed4dd71
 
 Stress-test the bind() / rebind() and caching engine:
 

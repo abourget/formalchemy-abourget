@@ -69,8 +69,8 @@ class AbstractField(object):
 
       >>> from formalchemy.tests import FieldSet, User
       >>> fs = FieldSet(User)
-      >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())  #doctest: +ELLIPSIS
-      <formalchemy.tests.FieldSet object ...>
+      >>> fs.append(Field('foo').dropdown(options=[('one', 1), ('two', 2)]).radio())
+      <FieldSet with ['id', 'email', 'password', 'name', 'orders', 'foo']>
 
     or::
 

@@ -154,7 +154,15 @@ class AbstractFieldSet(base.EditableRenderer):
         self._render_fields._list.remove(field.name)
         self._render_fields._list.insert(idx, field.name)
         return self
-    
+
+    def __repr__(self):
+        _fields = self._fields
+        conf = ''
+        if self._render_fields:
+            conf = ' (configured)'
+            _fields = self._render_fields
+        return '<%s%s with %r>' % (self.__class__.__name__, conf,
+                                   _fields.keys())
 
 class FieldSet(AbstractFieldSet):
     """

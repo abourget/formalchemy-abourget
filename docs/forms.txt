@@ -206,8 +206,8 @@ This will display a `FieldSet` without those two fields.
 If you want to make on field read-only (based on permissions for example),
 you can modify a Field in place using the `modify()` method::
 
-  >>> fs.modify(fs.email.readonly())  #doctest: +ELLIPSIS
-  <...FieldSet object ...>
+  >>> fs.modify(fs.email.readonly())
+  <UserFieldSet (configured) with ['name', 'email']>
 
 Including data from more than one class
 =======================================

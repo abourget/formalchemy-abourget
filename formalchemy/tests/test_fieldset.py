@@ -705,8 +705,8 @@ True
 
 # Field
 >>> fs = FieldSet(One)
->>> fs.append(Field('foo'))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs.append(Field('foo'))
+<FieldSet with ['id', 'foo']>
 >>> print configure_and_render(fs, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -716,8 +716,8 @@ True
 </div>
 
 >>> fs = FieldSet(One)
->>> fs.append(Field('foo', types.Integer, value=2))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs.append(Field('foo', types.Integer, value=2))
+<FieldSet with ['id', 'foo']>
 >>> fs.foo.value
 2
 >>> print configure_and_render(fs, focus=None)
@@ -765,8 +765,8 @@ True
 <input id="Manual--a" name="Manual--a" type="text" value="asdf" />
 
 >>> fs = FieldSet(One)
->>> fs.append(Field('foo', types.Integer, value=2).dropdown(options=[('1', 1), ('2', 2)]))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs.append(Field('foo', types.Integer, value=2).dropdown(options=[('1', 1), ('2', 2)]))
+<FieldSet with ['id', 'foo']>
 >>> print configure_and_render(fs, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -787,15 +787,15 @@ True
 True
 
 >>> fs2 = FieldSet(One)
->>> fs2.append(Field('foo', types.Integer, value=2))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs2.append(Field('foo', types.Integer, value=2))
+<FieldSet with ['id', 'foo']>
 >>> fs2.configure(options=[fs2.foo.dropdown(options=[('1', 1), ('2', 2)])], focus=None)
 >>> fs.render() == fs2.render()
 True
 
 >>> fs_1 = FieldSet(One)
->>> fs_1.append(Field('foo', types.Integer, value=[2, 3]).dropdown(options=[('1', 1), ('2', 2), ('3', 3)], multiple=True))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs_1.append(Field('foo', types.Integer, value=[2, 3]).dropdown(options=[('1', 1), ('2', 2), ('3', 3)], multiple=True))
+<FieldSet with ['id', 'foo']>
 >>> print configure_and_render(fs_1, focus=None)
 <div>
  <label class="field_opt" for="One--foo">
@@ -820,12 +820,12 @@ True
 
 # test attribute names
 >>> fs = FieldSet(One)
->>> fs.append(Field('foo'))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs.append(Field('foo'))
+<FieldSet with ['id', 'foo']>
 >>> fs.foo == fs['foo']
 True
->>> fs.append(Field('add'))  #doctest: +ELLIPSIS
-<formalchemy.tests.FieldSet ...>
+>>> fs.append(Field('add'))
+<FieldSet with ['id', 'foo', 'add']>
 >>> fs.add == fs['add']
 False
 
