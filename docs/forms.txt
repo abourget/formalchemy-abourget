@@ -113,6 +113,8 @@ parameter, such as here, to render name and options-as-checkboxes::
   >>> fs2 = fs.bind(bill)
   >>> fs2.configure(include=[fs.name, fs.orders.checkbox()]) 
 
+See :ref:`below <customizing>` how to customize your forms.
+
 
 Rendering
 ---------
@@ -172,6 +174,8 @@ You can also render individual fields for more fine-grained control::
   <input id="User-1-name" maxlength="30" name="User-1-name" type="text" value="Bill" />
 
 
+.. _customizing::
+
 Custom FieldSet
 ===============
 
@@ -208,6 +212,13 @@ you can modify a Field in place using the `modify()` method::
 
   >>> fs.modify(fs.email.readonly())
   <UserFieldSet (configured) with ['name', 'email']>
+
+You can also use the new ``set()`` method that changes settings *in-place*:
+
+  >>> fs.email.set(readonly=True)
+  <UserFieldSet (configured) with ['name', 'email']>
+  >>> fs.email.is_readonly()
+  True
 
 Including data from more than one class
 =======================================

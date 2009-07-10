@@ -22,7 +22,7 @@ __all__ = ['FieldRenderer', 'SelectFieldRenderer',
            'PasswordFieldRenderer', 'HiddenFieldRenderer',
            'DateFieldRenderer', 'TimeFieldRenderer',
            'DateTimeFieldRenderer', 'EscapingReadonlyRenderer',
-           'CheckBoxFieldRenderer', 'CheckBoxSet',
+           'CheckBoxFieldRenderer', 'CheckBoxSet', 'RadioSet',
            'FileFieldRenderer', 'IntegerFieldRenderer']
 
 
