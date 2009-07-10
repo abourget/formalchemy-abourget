@@ -1,0 +1,9 @@
+Examples
+========
+
+In this page, you will find examples for different parts of FormAlchemy.
+
+You'll notice there are many examples in the documentation that reference
+some unknown objects (like `One`, `User`, `Order`, etc..). These are defined
+in :mod:`formalchemy/tests/__init__.py`.
+
